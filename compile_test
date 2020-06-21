@@ -1,1 +1,1 @@
-javac -Xplugin:PluginExample1 -g -cp ./build/libs/javac-plugin-1.0-SNAPSHOT.jar:/home/evegny/Documents/jdk1.8.0_171/jre/../lib/tools.jar src/main/java/ru/jenya/javac/plugin/PluginExample1.java
+javac -Xplugin:PluginExample1 -g -cp ./build/libs/javac-plugin-1.0-SNAPSHOT.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_251.jdk/Contents/Home/jre/../lib/tools.jar src/main/java/ru/jenya/javac/plugin/PluginExample1.java

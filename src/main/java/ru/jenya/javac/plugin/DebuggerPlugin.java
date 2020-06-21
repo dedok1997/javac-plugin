@@ -1,63 +1,36 @@
 package ru.jenya.javac.plugin;
 
-
-import com.sun.source.tree.*;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.StatementTree;
+import com.sun.source.tree.Tree;
 import com.sun.source.util.*;
 import com.sun.tools.javac.api.BasicJavacTask;
-import com.sun.tools.javac.code.TypeTag;
-import com.sun.tools.javac.comp.MemberEnter;
 import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.parser.ParserFactory;
 import com.sun.tools.javac.tree.EndPosTable;
 import com.sun.tools.javac.tree.JCTree;
 import com.sun.tools.javac.tree.TreeCopier;
 import com.sun.tools.javac.tree.TreeMaker;
-import com.sun.tools.javac.util.*;
+import com.sun.tools.javac.util.Context;
+import com.sun.tools.javac.util.Names;
+import com.sun.tools.javac.util.Position;
 
-import javax.tools.JavaFileObject;
-import java.lang.annotation.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.sun.tools.javac.util.List.nil;
-
-/*
-
-TaskEvent e.getKind():
-    PARSE – builds an Abstract Syntax Tree (AST)
-    ENTER – source code imports are resolved
-    ANALYZE – parser output (an AST) is analyzed for errors
-    GENERATE – generating binaries for the target source file
-
-
-JavacTask -
- */
-public class PluginExample1 implements Plugin {
-
-    public static boolean pr(int b){
-        System.out.println(b);
-        return false;
-    }
+public class DebuggerPlugin implements Plugin {
 
     public static void main(String[] args) {
-        int a = 5;
+        for(int i = 0;i<1000000;i++){
+            int x = 2;
 
-//        if(a == 2) {
-//            System.out.println(a);} else{
-//            System.out.println(2); }
+            x++;
 
-        System.out.println(123);
-
+        }
     }
 
     @Override
     public String getName() {
-        return "PluginExample1";
+        return "DebuggerPlugin";
     }
 
 
@@ -78,10 +51,7 @@ public class PluginExample1 implements Plugin {
                     return;
                 }
                 JCTree.JCCompilationUnit compilationUnit = (JCTree.JCCompilationUnit) e.getCompilationUnit();
-                Position.LineMap lineMap = compilationUnit.lineMap;
-                Position.LineTabMapImpl map = (Position.LineTabMapImpl) lineMap;
-                EndPosTable endPositions = compilationUnit.endPositions;
-                compilationUnit.accept(new TreeScannerImpl((BasicJavacTask) task, endPositions, compilationUnit, map), null);
+                compilationUnit.accept(new TreeScannerImpl((BasicJavacTask) task, compilationUnit), null);
             }
         });
     }
@@ -97,13 +67,10 @@ class TreeScannerImpl extends TreeScanner<Void, Void> {
     private JCTree.JCCompilationUnit unit;
     private Position.LineTabMapImpl lineMap;
 
-    public TreeScannerImpl(BasicJavacTask context, EndPosTable table, JCTree.JCCompilationUnit unit, Position.LineTabMapImpl lm) {
-        this.task = context;
+    public TreeScannerImpl(BasicJavacTask task, JCTree.JCCompilationUnit compilationUnit) {
+        this.task = task;
         instance = Trees.instance(task);
-        this.table = table;
-        this.unit = unit;
-        this.maker = TreeMaker.instance(task.getContext());
-        lineMap = lm;
+        maker = TreeMaker.instance(task.getContext());
     }
 
     private JCTree.JCIf buildIf(JCTree.JCStatement action, JCTree.JCExpression condition) {
@@ -134,10 +101,9 @@ class TreeScannerImpl extends TreeScanner<Void, Void> {
             try {
 
                 int endPos = table.getEndPos(((JCTree) statement));
-                int column = unit.getLineMap().getColumnNumber(endPos);
                 int line = unit.getLineMap().getLineNumber(endPos);
 
-                int l1 = 54;
+                int l1 = 26;
                 if (line == l1) {
                     String condition = "pr(a) || a == 5";
 
