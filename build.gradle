@@ -6,13 +6,13 @@ tasks.withType(JavaCompile) {
     //File s = "/Library/Java/JavaVirtualMachines/jdk1.8.0_251.jdk/Contents/Home/jre/../lib/tools.jar"
     //classpath += files()
     //classpath += s
-    options.compilerArgs += ["-Xplugin:DebuggerPlugin"]
+    //options.compilerArgs += ["-Xplugin:\"DebuggerPlugin ru.jenya.javac.plugin.Example.java:9:i==999999 ru.jenya.javac.plugin.Example.java:9:i==999998\""]
     options.fork = true
     options.forkOptions.executable = 'javac'
 }
 
 
-group 'org.example'
+group ''
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
@@ -24,7 +24,7 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile files("${System.getProperty('java.home')}/../lib/tools.jar")
-    compile files("/Users/evgenijmartyn/study/javac-plugin/build/libs/javac-plugin-1.0-SNAPSHOT.jar")
+    //compile files("/Users/evgenijmartyn/study/javac-plugin/build/libs/javac-plugin-1.0-SNAPSHOT.jar")
 
     //compile files("/home/evegny/Documents/idea-IU-193.6494.35/plugins/java/lib/rt/debugger-agent.jar")
 }
